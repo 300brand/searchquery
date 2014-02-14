@@ -1,4 +1,4 @@
-package searchquery
+package query
 
 var tests = []struct {
 	Input  string
@@ -105,7 +105,7 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorSubquery,
-					Query: Query{
+					Query: &Query{
 						Optional: []SubQuery{
 							SubQuery{
 								Quote:    QuoteNone,
@@ -127,6 +127,13 @@ var tests = []struct {
 		Input:  "+a +(b c) -d",
 		String: "+:a +(:b :c) -:d",
 		Query: Query{
+			Excluded: []SubQuery{
+				SubQuery{
+					Quote:    QuoteNone,
+					Operator: OperatorField,
+					Phrase:   "d",
+				},
+			},
 			Required: []SubQuery{
 				SubQuery{
 					Quote:    QuoteNone,
@@ -136,7 +143,7 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorSubquery,
-					Query: Query{
+					Query: &Query{
 						Optional: []SubQuery{
 							SubQuery{
 								Quote:    QuoteNone,
@@ -150,13 +157,6 @@ var tests = []struct {
 							},
 						},
 					},
-				},
-			},
-			Excluded: []SubQuery{
-				SubQuery{
-					Quote:    QuoteNone,
-					Operator: OperatorField,
-					Phrase:   "d",
 				},
 			},
 		},
@@ -175,7 +175,7 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorSubquery,
-					Query: Query{
+					Query: &Query{
 						Optional: []SubQuery{
 							SubQuery{
 								Quote:    QuoteNone,
@@ -197,18 +197,18 @@ var tests = []struct {
 		Input:  "+mandatoryWord -excludedWord +field:word \"exact phrase\"",
 		String: "+:mandatoryWord +field:word :\"exact phrase\" -:excludedWord",
 		Query: Query{
-			Optional: []SubQuery{
-				SubQuery{
-					Quote:    QuoteDouble,
-					Operator: OperatorField,
-					Phrase:   "exact phrase",
-				},
-			},
 			Excluded: []SubQuery{
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
 					Phrase:   "excludedWord",
+				},
+			},
+			Optional: []SubQuery{
+				SubQuery{
+					Quote:    QuoteDouble,
+					Operator: OperatorField,
+					Phrase:   "exact phrase",
 				},
 			},
 			Required: []SubQuery{
@@ -290,7 +290,7 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorSubquery,
-					Query: Query{
+					Query: &Query{
 						Required: []SubQuery{
 							SubQuery{
 								Quote:    QuoteDouble,
@@ -308,7 +308,7 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorSubquery,
-					Query: Query{
+					Query: &Query{
 						Required: []SubQuery{
 							SubQuery{
 								Quote:    QuoteDouble,
@@ -339,7 +339,7 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorSubquery,
-					Query: Query{
+					Query: &Query{
 						Optional: []SubQuery{
 							SubQuery{
 								Quote:    QuoteDouble,

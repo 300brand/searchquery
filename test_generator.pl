@@ -7,7 +7,7 @@ use Search::QueryParser;
 use Data::Dumper;
 
 my $header = <<HEADER;
-package searchquery
+package query
 
 var tests = []struct {
 	Input  string
@@ -123,7 +123,7 @@ sub go_SubQuery {
 	}
 
 	if ($subQ->{op} eq '()') {
-		$str .= "$indent\tQuery: " . go_Query($subQ->{value}, "$indent\t");
+		$str .= "$indent\tQuery: &" . go_Query($subQ->{value}, "$indent\t");
 	} else {
 		$str .= "$indent\tPhrase:   " . sdump($subQ->{value}) . ",\n";
 	}
