@@ -47,8 +47,10 @@ const (
 	PrefixRequired        = `+`
 )
 
+var reNot = `NOT|PAS|NICHT|NON`
+
 var Regexes = struct {
-	Term, Field, Operator, OperatorNoField, And, Or, Not *regexp.Regexp
+	Term, Field, Operator, OperatorNoField, And, Or, Not, Sign, SignWord *regexp.Regexp
 }{
 	Term:            regexp.MustCompile(`[^\s()]+`),
 	Field:           regexp.MustCompile(`[\w]+`),
@@ -56,11 +58,13 @@ var Regexes = struct {
 	OperatorNoField: regexp.MustCompile(`=~|!~|[~:#]`),                        // Ops that admit an empty left operand
 	And:             regexp.MustCompile(`\&|AND|ET|UND|E`),
 	Or:              regexp.MustCompile(`\||OR|OU|ODER|O`),
-	Not:             regexp.MustCompile(`NOT|PAS|NICHT|NON`),
+	Not:             regexp.MustCompile(reNot),
+	SignWord:        regexp.MustCompile(`^(` + reNot + `)\b\s*`),
 }
 
-func Parse(q string) *Query {
-	return &Query{}
+func Parse(s string) (q *Query, err error) {
+	q, _, err = parse(s, false, "", OperatorField)
+	return
 }
 
 func (q Query) String() string {
@@ -84,8 +88,36 @@ func (sq SubQuery) String() string {
 	return fmt.Sprintf("%s%s%s%s%s", sq.Field, sq.Operator, sq.Quote, sq.Value, sq.Quote)
 }
 
-func parse(q, implicitPlus, parentField, parentOp string) {
-	for q != "" {
+func parse(s string, implicitPlus bool, parentField, parentOperator string) (q *Query, remaining string, err error) {
+	q = new(Query)
+	loops := 0
+	for s != "" {
+		fmt.Printf("Loop: %d\n", loops)
+		loops++
 
+		prefix := PrefixOptional
+		if implicitPlus {
+			prefix = PrefixRequired
+		}
+		//field := parentField
+		//operator := parentOperator
+
+		if s[0] == ')' {
+			break
+		}
+		// Parse prefix ('+', '-' or 'NOT')
+		if sign := s[0]; sign == '+' || sign == '-' {
+			prefix = s[0:1]
+		} else if sm := Regexes.SignWord.FindStringSubmatch(s); len(sm) > 0 {
+			prefix = PrefixExcluded
+		}
+
+		fmt.Println("Prefix", prefix)
+		break
 	}
+
+	if len(q.Required) == 0 && len(q.Optional) == 0 {
+		err = fmt.Errorf("No positive value in query: %s", s)
+	}
+	return
 }
