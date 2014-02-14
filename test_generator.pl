@@ -125,7 +125,7 @@ sub go_SubQuery {
 	if ($subQ->{op} eq '()') {
 		$str .= "$indent\tQuery: &" . go_Query($subQ->{value}, "$indent\t");
 	} else {
-		$str .= "$indent\tPhrase:   " . sdump($subQ->{value}) . ",\n";
+		$str .= "$indent\tValue:    " . sdump($subQ->{value}) . ",\n";
 	}
 
 	# return  "(" . go_Query($subQ->{value}) . ")"  if $subQ->{op} eq '()';

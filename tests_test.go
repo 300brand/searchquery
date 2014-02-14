@@ -13,12 +13,12 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "a",
+					Value:    "a",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "b",
+					Value:    "b",
 				},
 			},
 		},
@@ -31,12 +31,12 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "a",
+					Value:    "a",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "b",
+					Value:    "b",
 				},
 			},
 		},
@@ -49,12 +49,12 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "a",
+					Value:    "a",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "b",
+					Value:    "b",
 				},
 			},
 		},
@@ -68,19 +68,19 @@ var tests = []struct {
 					Quote:    QuoteSingle,
 					Operator: OperatorRegex,
 					Field:    "txt",
-					Phrase:   "^foo.*",
+					Value:    "^foo.*",
 				},
 				SubQuery{
 					Quote:    QuoteSingle,
 					Operator: OperatorRelGTE,
 					Field:    "date",
-					Phrase:   "01.01.2001",
+					Value:    "01.01.2001",
 				},
 				SubQuery{
 					Quote:    QuoteSingle,
 					Operator: OperatorRelLTE,
 					Field:    "date",
-					Phrase:   "02.02.2002",
+					Value:    "02.02.2002",
 				},
 			},
 		},
@@ -93,14 +93,14 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "d",
+					Value:    "d",
 				},
 			},
 			Required: []SubQuery{
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "a",
+					Value:    "a",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
@@ -110,12 +110,12 @@ var tests = []struct {
 							SubQuery{
 								Quote:    QuoteNone,
 								Operator: OperatorField,
-								Phrase:   "b",
+								Value:    "b",
 							},
 							SubQuery{
 								Quote:    QuoteNone,
 								Operator: OperatorField,
-								Phrase:   "c",
+								Value:    "c",
 							},
 						},
 					},
@@ -131,14 +131,14 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "d",
+					Value:    "d",
 				},
 			},
 			Required: []SubQuery{
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "a",
+					Value:    "a",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
@@ -148,12 +148,12 @@ var tests = []struct {
 							SubQuery{
 								Quote:    QuoteNone,
 								Operator: OperatorField,
-								Phrase:   "b",
+								Value:    "b",
 							},
 							SubQuery{
 								Quote:    QuoteNone,
 								Operator: OperatorField,
-								Phrase:   "c",
+								Value:    "c",
 							},
 						},
 					},
@@ -170,7 +170,7 @@ var tests = []struct {
 					Quote:    QuoteNone,
 					Operator: OperatorCSV,
 					Field:    "Id",
-					Phrase:   "123,444,555,666",
+					Value:    "123,444,555,666",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
@@ -180,12 +180,12 @@ var tests = []struct {
 							SubQuery{
 								Quote:    QuoteNone,
 								Operator: OperatorField,
-								Phrase:   "b",
+								Value:    "b",
 							},
 							SubQuery{
 								Quote:    QuoteNone,
 								Operator: OperatorField,
-								Phrase:   "c",
+								Value:    "c",
 							},
 						},
 					},
@@ -197,31 +197,31 @@ var tests = []struct {
 		Input:  "+mandatoryWord -excludedWord +field:word \"exact phrase\"",
 		String: "+:mandatoryWord +field:word :\"exact phrase\" -:excludedWord",
 		Query: Query{
-			Excluded: []SubQuery{
-				SubQuery{
-					Quote:    QuoteNone,
-					Operator: OperatorField,
-					Phrase:   "excludedWord",
-				},
-			},
 			Optional: []SubQuery{
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "exact phrase",
+					Value:    "exact phrase",
+				},
+			},
+			Excluded: []SubQuery{
+				SubQuery{
+					Quote:    QuoteNone,
+					Operator: OperatorField,
+					Value:    "excludedWord",
 				},
 			},
 			Required: []SubQuery{
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "mandatoryWord",
+					Value:    "mandatoryWord",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
 					Field:    "field",
-					Phrase:   "word",
+					Value:    "word",
 				},
 			},
 		},
@@ -234,12 +234,12 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "Red Hat",
+					Value:    "Red Hat",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "Google",
+					Value:    "Google",
 				},
 			},
 		},
@@ -252,14 +252,14 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteNone,
 					Operator: OperatorField,
-					Phrase:   "Google",
+					Value:    "Google",
 				},
 			},
 			Excluded: []SubQuery{
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "Red Hat",
+					Value:    "Red Hat",
 				},
 			},
 		},
@@ -272,12 +272,12 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "Red Hat",
+					Value:    "Red Hat",
 				},
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "Fusion IO",
+					Value:    "Fusion IO",
 				},
 			},
 		},
@@ -295,12 +295,12 @@ var tests = []struct {
 							SubQuery{
 								Quote:    QuoteDouble,
 								Operator: OperatorField,
-								Phrase:   "Cloud Computing",
+								Value:    "Cloud Computing",
 							},
 							SubQuery{
 								Quote:    QuoteDouble,
 								Operator: OperatorField,
-								Phrase:   "Red Hat",
+								Value:    "Red Hat",
 							},
 						},
 					},
@@ -313,12 +313,12 @@ var tests = []struct {
 							SubQuery{
 								Quote:    QuoteDouble,
 								Operator: OperatorField,
-								Phrase:   "Cloud Computing",
+								Value:    "Cloud Computing",
 							},
 							SubQuery{
 								Quote:    QuoteDouble,
 								Operator: OperatorField,
-								Phrase:   "Fusion IO",
+								Value:    "Fusion IO",
 							},
 						},
 					},
@@ -334,7 +334,7 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "Cloud Computing",
+					Value:    "Cloud Computing",
 				},
 				SubQuery{
 					Quote:    QuoteNone,
@@ -344,12 +344,12 @@ var tests = []struct {
 							SubQuery{
 								Quote:    QuoteDouble,
 								Operator: OperatorField,
-								Phrase:   "Red Hat",
+								Value:    "Red Hat",
 							},
 							SubQuery{
 								Quote:    QuoteDouble,
 								Operator: OperatorField,
-								Phrase:   "Fusion IO",
+								Value:    "Fusion IO",
 							},
 						},
 					},
@@ -365,12 +365,12 @@ var tests = []struct {
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "Colon:In the Tech",
+					Value:    "Colon:In the Tech",
 				},
 				SubQuery{
 					Quote:    QuoteDouble,
 					Operator: OperatorField,
-					Phrase:   "Red Hat",
+					Value:    "Red Hat",
 				},
 			},
 		},
