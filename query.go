@@ -3,7 +3,9 @@
 package query
 
 import (
+	"fmt"
 	"regexp"
+	"strings"
 )
 
 type Query struct {
@@ -16,12 +18,11 @@ type SubQuery struct {
 	Quote    Quote
 	Operator Operator
 	Field    string
-	Phrase   string
+	Value    string
 	Query    *Query // non-nil when Op == ()
 }
 
 type Quote string
-
 type Operator string
 
 const (
@@ -40,6 +41,10 @@ const (
 	OperatorRelLTE            = `<=`
 	OperatorRelNE             = `!=`
 	OperatorSubquery          = `()`
+
+	PrefixExcluded string = `-`
+	PrefixOptional        = ``
+	PrefixRequired        = `+`
 )
 
 var Regexes = struct {
@@ -56,6 +61,27 @@ var Regexes = struct {
 
 func Parse(q string) *Query {
 	return &Query{}
+}
+
+func (q Query) String() string {
+	buf := make([]string, 0, len(q.Required)+len(q.Optional)+len(q.Excluded))
+	for _, sq := range q.Required {
+		buf = append(buf, PrefixRequired+sq.String())
+	}
+	for _, sq := range q.Optional {
+		buf = append(buf, PrefixOptional+sq.String())
+	}
+	for _, sq := range q.Excluded {
+		buf = append(buf, PrefixExcluded+sq.String())
+	}
+	return strings.Join(buf, " ")
+}
+
+func (sq SubQuery) String() string {
+	if sq.Operator == OperatorSubquery {
+		return "(" + sq.Query.String() + ")"
+	}
+	return fmt.Sprintf("%s%s%s%s%s", sq.Field, sq.Operator, sq.Quote, sq.Value, sq.Quote)
 }
 
 func parse(q, implicitPlus, parentField, parentOp string) {
