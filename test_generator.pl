@@ -9,11 +9,12 @@ use Data::Dumper;
 my $header = <<HEADER;
 package query
 
-var tests = []struct {
+type testType struct {
 	Input  string
 	Query  Query
 	String string
-}{
+}
+
 HEADER
 my $fmt = <<FMT;
 	{
@@ -22,7 +23,6 @@ my $fmt = <<FMT;
 		Query: %s	},
 FMT
 my $footer = <<FOOTER;
-}
 FOOTER
 
 my @tests = (
@@ -49,14 +49,26 @@ $Data::Dumper::Useqq = 1;
 $Data::Dumper::Varname = '';
 
 print($header);
-foreach (@tests) {
-	my $s = "$_->{query}";
-	my $qp = new Search::QueryParser;
-	my $query;
-	$query = $qp->parse($s) or $query = "Error in query : " . $qp->err;
-	printf($fmt, sdump($s), sdump($qp->unparse($query)), go_Query($query, "\t\t"));
-}
+
+writeTests("parseTests", 0);
+writeTests("parseGreedyTests", 1);
+
 print($footer);
+
+sub writeTests {
+	my $var = shift;
+	my $greedy = shift;
+	printf("var %s = []testType{\n", $var);
+	foreach (@tests) {
+		my $s = "$_->{query}";
+		my $qp = new Search::QueryParser;
+		my $query;
+		$query = $qp->parse($s, $greedy) or $query = "Error in query : " . $qp->err;
+		printf($fmt, sdump($s), sdump($qp->unparse($query)), go_Query($query, "\t\t"));
+	}
+	print("}\n")
+}
+
 
 sub sdump {
 	return substr(Dumper(shift), 5, -2)

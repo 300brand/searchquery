@@ -95,7 +95,12 @@ var (
 )
 
 func Parse(s string) (q *Query, err error) {
-	q, _, err = parse(s, "", OperatorField)
+	q, _, err = parse(s, PrefixOptional, "", OperatorField)
+	return
+}
+
+func ParseGreedy(s string) (q *Query, err error) {
+	q, _, err = parse(s, PrefixRequired, "", OperatorField)
 	return
 }
 
@@ -120,11 +125,11 @@ func (sq SubQuery) String() string {
 	return fmt.Sprintf("%s%s%s%s%s", sq.Field, sq.Operator, sq.Quote, sq.Value, sq.Quote)
 }
 
-func parse(s string, parentField string, parentOperator Operator) (q *Query, remaining string, err error) {
+func parse(s string, defaultPrefix string, parentField string, parentOperator Operator) (q *Query, remaining string, err error) {
 	q = new(Query)
 	preBool := ""
 	for s != "" {
-		prefix := PrefixOptional
+		prefix := defaultPrefix
 		subQuery := SubQuery{
 			Field:    parentField,
 			Operator: parentOperator,
@@ -173,7 +178,7 @@ func parse(s string, parentField string, parentOperator Operator) (q *Query, rem
 
 		// Parenthesis matching
 		if sm = R.OpenParen.FindStringSubmatch(s); len(sm) > 0 {
-			subQuery.Query, s, err = parse(s[len(sm[0]):], subQuery.Field, subQuery.Operator)
+			subQuery.Query, s, err = parse(s[len(sm[0]):], defaultPrefix, subQuery.Field, subQuery.Operator)
 			// Important not to pass OperatorSubquery into the sub-parse
 			subQuery.Operator = OperatorSubquery
 			if err != nil {
