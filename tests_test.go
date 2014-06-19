@@ -1,4 +1,4 @@
-package query
+package searchquery
 
 type testType struct {
 	Input  string

@@ -1,6 +1,6 @@
 // Ported from
 // http://search.cpan.org/~karman/Search-Query-0.23/lib/Search/Query/Parser.pm
-package query
+package searchquery
 
 import (
 	"fmt"
